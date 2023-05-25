@@ -1,6 +1,5 @@
 package ru.netology.repository;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 
@@ -13,11 +12,12 @@ import java.util.stream.Collectors;
 
 @org.springframework.stereotype.Repository
 public class Repository {
-    @Autowired
-    private NamedParameterJdbcTemplate template;
+
+    private final NamedParameterJdbcTemplate template;
     private final String requestScript;
 
-    public Repository() {
+    public Repository(NamedParameterJdbcTemplate template) {
+        this.template = template;
         this.requestScript = read();
     }
 
@@ -31,8 +31,6 @@ public class Repository {
     }
 
     public List<String> getProductName(String name) {
-        var debug = template.queryForList(requestScript, Map.of("name", name), String.class);
-        System.out.println(debug);
-        return debug;
+        return template.queryForList(requestScript, Map.of("name", name), String.class);
     }
 }
